@@ -38,7 +38,7 @@ export const sendMessage = async (message) => {
 };
 
 export const searchUser = (array, value) => {
-    const response = array.filter((item) => item.name.includes(value.toLowerCase()))
+    const response = array.filter((item) =>item.name.toLowerCase().includes(value.toLowerCase())); 
     return response
 }
 

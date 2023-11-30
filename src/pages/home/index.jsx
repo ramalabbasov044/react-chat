@@ -24,9 +24,7 @@ const Home = () => {
           return;
         }
     
-        const response = usersData.filter((item) =>
-          item.name.toLowerCase().includes(value.toLowerCase())
-        );
+        const response = searchUser(usersData,value)
         setUsersData(response);
       };
 
