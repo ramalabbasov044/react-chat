@@ -15,7 +15,6 @@ const Home = () => {
 
     useEffect(() => {
         localStorage.getItem('data') ? navigate("/") : navigate("/login")
-        console.log("workin")
         getAllUsers()
     }, [])
 
@@ -47,7 +46,7 @@ const Home = () => {
 
     const logoutFunction = () => {
         const response = logOut()
-        console.log(response);
+        response ? navigate("/") : navigate("/login")
     }
     
     return (

@@ -51,8 +51,8 @@ export const searchUser = (array, value) => {
 
 export const logOut = () => {
     try{
-        let boolStatus = localStorage.removeItem('data')
-        return boolStatus
+        let item = localStorage.removeItem('data')
+        return !!item
     }catch (err){
         console.log(err);
     }
