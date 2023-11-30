@@ -12,7 +12,6 @@ const instanceAxios = axios.create({
     },
 });
 
-
 export const register = async (user_information) => {
     const response = await instanceAxios.post(`/auth/register`, user_information);
     return response;
@@ -39,7 +38,7 @@ export const sendMessage = async (message) => {
 };
 
 export const searchUser = (array, value) => {
-    const response = array.filter((item) => item.name === value)
+    const response = array.filter((item) => item.name.includes(value.toLowerCase()))
     return response
 }
 

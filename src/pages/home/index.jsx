@@ -9,26 +9,37 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 const Home = () => {
-    const [usersData,setUsersData] = useState([])
+    const [usersData,setUsersData] = useState()
+    const [loading,setLoading] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
-        localStorage.getItem('data') ? null : navigate("/login")
         SwitchedFunc()
+        localStorage.getItem('data') ? null : navigate("/login")
     }, [])
 
     const handleInput = (value) => {
-        const filteredItem = searchUser(usersData,value)
-        console.log(filteredItem,usersData,value);
-    }
+        if (!value.trim()) {
+          SwitchedFunc();
+          return;
+        }
+    
+        const response = usersData.filter((item) =>
+          item.name.toLowerCase().includes(value.toLowerCase())
+        );
+        setUsersData(response);
+      };
 
     const SwitchedFunc = async () => {
         try {
+            setLoading(true)
             const result = await users();
             const data = result.data.data
             setUsersData(data)
         }catch (err) {
             console.log(err);
+        }finally{
+            setLoading(false)
         }
     }
 
@@ -53,7 +64,11 @@ const Home = () => {
 
                     <Bottom>
                         <SearchComponent handleInput={handleInput} />
-                        
+                            <LoadingComponent>
+                                {
+                                    loading ? "Loading Users...": ""
+                                }
+                            </LoadingComponent>
                         <UsersComponent usersData={usersData} />
                     </Bottom>
                 </LeftSide>
@@ -124,4 +139,14 @@ const LogOutButton = styled.div`
     font-weight: 600;
     line-height: 150%; 
     cursor: pointer;
+`
+
+const LoadingComponent = styled.div`
+    text-align:center;
+    padding: 10px 24px;
+    color: rgba(0, 0, 0, 0.40);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%; 
 `

@@ -15,7 +15,7 @@ const UsersComponent = ({ usersData }) => {
       <Content>
           {
             // eslint-disable-next-line react/prop-types, react/jsx-key
-            usersData.map((item) => 
+            usersData?.map((item) => 
                 <Item onClick={() => getUserFunction(item.userId)} key={item.userId}>
                     <Image src={item.image} />
                     <Right>

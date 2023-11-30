@@ -19,6 +19,8 @@ let formatDate = (dateString) => {
 
 const Messages = () => {
     const [messageData,setMessageData] = useState([])
+    const [loading,setLoading] = useState(false)
+    const [messageLoading,setMessageLoading] = useState(false)
     const { userData } = useGlobalStore()
 
     useEffect(() => {
@@ -29,11 +31,14 @@ const Messages = () => {
     const getUserMessages = async () => {
       if (userData[0]) {
         try {
+          setLoading(true)
           const result = await getMessages(userData[0].userId);
           const sortedMessages = result.data.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
           setMessageData(sortedMessages);
         } catch (err) {
           console.log(err);
+        }finally{
+          setLoading(false)
         }
       }
       return;
@@ -42,11 +47,14 @@ const Messages = () => {
     const handleData = async (message) => {
       if(userData[0]){
         try {
+            setMessageLoading(true)
             let id = userData[0].userId
             await sendMessage({"to_id":id,"message":message});
             getUserMessages()
         }catch (err) {
             console.log(err);
+        }finally{
+          setMessageLoading(false)
         }
       }
       return
@@ -72,6 +80,11 @@ const Messages = () => {
 
           <Bottom>
               <MessagesBody>
+                    <LoadingComponent>
+                        {
+                            loading ? "Loading Messages...": ""
+                        }
+                    </LoadingComponent>
                     {
                       messageData.map((item) => item.me ? 
                         <RightMessageBody  key={item.createdAt}>
@@ -99,6 +112,11 @@ const Messages = () => {
               </MessagesBody>
 
               <SendMessageBody>
+                <LoadingComponent>
+                        {
+                            messageLoading ? "Sending Message": ""
+                        }
+                </LoadingComponent>
                 <SendMessage handleData={handleData} />
               </SendMessageBody>
           </Bottom>
@@ -211,4 +229,14 @@ const MessageTime = styled.p`
     font-weight: 600;
     line-height: 150%;
     opacity: .3;
+`
+
+const LoadingComponent = styled.div`
+    text-align:center;
+    padding: 10px 24px;
+    color: rgba(0, 0, 0, 0.40);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%; 
 `
