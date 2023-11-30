@@ -14,13 +14,13 @@ const Home = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        SwitchedFunc()
-        localStorage.getItem('data') ? null : navigate("/login")
+        getAllUsers()
+        localStorage.getItem('data') ? navigate("/") : navigate("/login")
     }, [])
 
     const handleInput = (value) => {
         if (!value.trim()) {
-          SwitchedFunc();
+          getAllUsers();
           return;
         }
     
@@ -28,12 +28,15 @@ const Home = () => {
         setUsersData(response);
       };
 
-    const SwitchedFunc = async () => {
+    const getAllUsers = async () => {
         try {
             setLoading(true)
             const result = await users();
-            const data = result.data.data
-            setUsersData(data)
+            if(result.status == 200){
+                const data = result.data.data
+                setUsersData(data)
+            }
+            
         }catch (err) {
             console.log(err);
         }finally{
