@@ -14,8 +14,9 @@ const Home = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        getAllUsers()
         localStorage.getItem('data') ? navigate("/") : navigate("/login")
+        console.log("workin")
+        getAllUsers()
     }, [])
 
     const handleInput = (value) => {
@@ -48,6 +49,7 @@ const Home = () => {
         const response = logOut()
         console.log(response);
     }
+    
     return (
         <Container>
             <Content>

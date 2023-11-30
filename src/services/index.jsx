@@ -1,16 +1,23 @@
 import baseUrl from '../constants/base/baseUrl'
 import axios from "axios";
 
-const accessToken  = localStorage.getItem('data')
+
 
 const instanceAxios = axios.create({
     baseURL: baseUrl,
     headers: {
         'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer' + ' ' + accessToken,
+        'Content-Type': 'application/json'
     },
 });
+
+instanceAxios.interceptors.request.use((config) => {
+    const accessToken  = localStorage.getItem('data')
+    const tokenType  = localStorage.getItem('tokenType')
+    config.headers.Authorization = tokenType + ' ' + accessToken
+
+    return config
+})
 
 export const register = async (user_information) => {
     const response = await instanceAxios.post(`/auth/register`, user_information);
@@ -44,7 +51,8 @@ export const searchUser = (array, value) => {
 
 export const logOut = () => {
     try{
-        localStorage.removeItem('data')
+        let boolStatus = localStorage.removeItem('data')
+        return boolStatus
     }catch (err){
         console.log(err);
     }

@@ -25,6 +25,7 @@ const Login = () => {
     try {
         const result = await login(formData);
         localStorage.setItem('data',result.data.data.accessToken)
+        localStorage.setItem('tokenType',result.data.data.tokenType)
         // eslint-disable-next-line no-constant-condition
         result.status = 200 ? navigate("/") : null
     }catch (err) {
