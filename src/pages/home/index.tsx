@@ -7,26 +7,31 @@ import { useNavigate } from 'react-router-dom'
 import { users , searchUser , logOut } from '../../services/index'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import React from 'react'
 
-const Home = () => {
-    const [usersData,setUsersData] = useState()
-    const [loading,setLoading] = useState(false)
+import { userTypes } from '../../interface/interface'
+
+const Home: React.FC = () => {
+    const [usersData,setUsersData] = useState<userTypes[]>([])
+    const [loading,setLoading] = useState<boolean>(false)
     const navigate = useNavigate()
 
     useEffect(() => {
-        localStorage.getItem('data') ? navigate("/") : navigate("/login")
-        getAllUsers()
-    }, [])
-
-    const handleInput = (value) => {
-        if (!value.trim()) {
-          getAllUsers();
-          return;
+        if (!localStorage.getItem('data')) {
+            navigate("/login");
         }
-    
-        const response = searchUser(usersData,value)
+        getAllUsers();
+    }, []);
+
+    const handleInput = (value: string) => {
+        if (!value.trim()) {
+            getAllUsers()
+            return
+        }
+
+        const response = searchUser(usersData, value);
         setUsersData(response);
-      };
+    };
 
     const getAllUsers = async () => {
         try {
@@ -36,7 +41,6 @@ const Home = () => {
                 const data = result.data.data
                 setUsersData(data)
             }
-            
         }catch (err) {
             console.log(err);
         }finally{
@@ -44,11 +48,6 @@ const Home = () => {
         }
     }
 
-    const logoutFunction = () => {
-        const response = logOut()
-        response ? navigate("/") : navigate("/login")
-    }
-    
     return (
         <Container>
             <Content>
@@ -57,9 +56,10 @@ const Home = () => {
                         <Title>
                             Messages
                         </Title>
-                        <LogOutButton onClick={logoutFunction}>
-                            Log Out
-                        </LogOutButton>
+
+                        <Profile onClick={() => navigate("/profile")}>
+                            Go to Notification
+                        </Profile>
                     </Top>
 
                     <Border></Border>
@@ -134,15 +134,6 @@ const Bottom = styled.div`
     flex-direction: column;
 `
 
-const LogOutButton = styled.div`
-    color: #000;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 150%; 
-    cursor: pointer;
-`
-
 const LoadingComponent = styled.div`
     text-align:center;
     padding: 10px 24px;
@@ -151,4 +142,9 @@ const LoadingComponent = styled.div`
     font-style: normal;
     font-weight: 600;
     line-height: 150%; 
+`
+
+const Profile = styled.div`
+    font-weight: 600;
+    cursor: pointer;
 `

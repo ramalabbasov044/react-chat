@@ -3,14 +3,15 @@ import { useGlobalStore } from '../../provider/provider'
 import { getMessages , sendMessage } from '../../services/index'
 import SendMessage from '../SendMessage/index'
 import styled from 'styled-components'
+import React from 'react'
 
-let formatDate = (dateString) => {
-  const options = {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      timeZone: 'Asia/Baku', 
-      hour12: false, 
+
+let formatDate = (dateString: string) => {
+  enum options {
+      hour= '2-digit',
+      minute= '2-digit',
+      second= '2-digit',
+      timeZone= 'Asia/Baku', 
   };
 
   const formattedDate = new Date(dateString).toLocaleString('en-US', options);
@@ -33,7 +34,7 @@ const Messages = () => {
         try {
           setLoading(true)
           const result = await getMessages(userData[0].userId);
-          const sortedMessages = result.data.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+          const sortedMessages = result.data.data.sort((a:any,b:any) => new Date(a.createdAt) - new Date(b.createdAt));
           setMessageData(sortedMessages);
         } catch (err) {
           console.log(err);
@@ -44,11 +45,11 @@ const Messages = () => {
       return;
     };
 
-    const handleData = async (message) => {
+    const handleData = async (message: string) => {
       if(userData[0]){
         try {
             setMessageLoading(true)
-            let id = userData[0].userId
+            let id: number = userData[0].userId
             await sendMessage({"to_id":id,"message":message});
             getUserMessages()
         }catch (err) {
@@ -137,6 +138,7 @@ const Left = styled.div`
     display:flex;
     justify-content: space-between;
     gap: 16px;
+    cursor: pointer;
 `
 
 const UserImage = styled.img`

@@ -1,7 +1,7 @@
 const Error = () => {
   return (
     <>
-        Error Page
+        Error Page Murad oglan dors
     </>
   )
 }
